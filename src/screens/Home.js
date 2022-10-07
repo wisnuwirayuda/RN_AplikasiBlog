@@ -6,8 +6,20 @@ import {FlatGrid} from 'react-native-super-grid';
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      data: [],
+    };
   }
+
+  componentDidMount() {
+    this.getData();
+  }
+
+  getData = () => {
+    fetch('https://dummyjson.com/posts')
+      .then(response => response.json())
+      .then(json => this.setState({data: json.posts}));
+  };
 
   render() {
     return (
@@ -43,7 +55,7 @@ class Home extends Component {
         <View style={{flex: 1}}>
           <FlatGrid
             itemDimension={300}
-            data={[1, 2, 3, 4, 5, 6]}
+            data={this.state.data}
             renderItem={({item}) => (
               <View
                 style={{
@@ -51,14 +63,34 @@ class Home extends Component {
                   elevation: 2,
                   flexDirection: 'row',
                 }}>
-                <Image
-                  style={{width: 100, height: 100}}
-                  source={{
-                    uri: 'https://contenthub-static.grammarly.com/blog/wp-content/uploads/2017/11/how-to-write-a-blog-post.jpeg',
-                  }}></Image>
-                <View>
-                  <Text>{item}</Text>
-                  <Text>{item}</Text>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingHorizontal: 10,
+                  }}>
+                  <Image
+                    style={{
+                      width: 150,
+                      height: 150,
+                    }}
+                    source={require('../assets/img/books.png')}></Image>
+                </View>
+
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    flex: 1,
+                    padding: 10,
+                  }}>
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      marginBottom: 10,
+                    }}>
+                    {item.title}
+                  </Text>
+                  <Text>{item.body.slice(0, 100)}</Text>
                 </View>
               </View>
             )}
