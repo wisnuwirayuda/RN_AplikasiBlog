@@ -1,4 +1,4 @@
-package com.blogsederhana;
+package com.wisnuwirayuda.blogsederhana;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

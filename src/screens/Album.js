@@ -2,14 +2,27 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
-import {View, Text, Image, StatusBar, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, StatusBar, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome5';
+import {FlatGrid} from 'react-native-super-grid';
 
-class Detail extends Component {
+class Album extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      data: [],
+    };
   }
+
+  componentDidMount() {
+    this.getData();
+  }
+
+  getData = () => {
+    fetch('https://dummyjson.com/products')
+      .then(response => response.json())
+      .then(json => this.setState({data: json.products}));
+  };
 
   render() {
     return (
@@ -17,6 +30,8 @@ class Detail extends Component {
         style={{
           flex: 1,
           backgroundColor: '#444444',
+          justifyContent: 'space-between',
+          flexDirection: 'column',
         }}>
         <StatusBar barStyle={'#EDEDED'} backgroundColor={'#444444'}></StatusBar>
         <View
@@ -27,13 +42,13 @@ class Detail extends Component {
             flexDirection: 'row',
             paddingHorizontal: 20,
           }}>
-          <TouchableOpacity onPress={() => this.props.navigation.pop()}>
-            <Icon name="chevron-left" size={25} color="#DA0037" />
+          <TouchableOpacity>
+            <Icon name="bars" size={25} color="#DA0037" />
           </TouchableOpacity>
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Text style={{color: '#EDEDED', fontWeight: 'bold', fontSize: 18}}>
-              Detail
+              Album
             </Text>
           </View>
           <TouchableOpacity>
@@ -41,38 +56,48 @@ class Detail extends Component {
           </TouchableOpacity>
         </View>
         <View style={{flex: 1}}>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginVertical: 10,
-            }}>
-            <Image
-              source={this.props.route.params.image}
-              style={{
-                width: 250,
-                height: 250,
-              }}></Image>
-          </View>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 18,
-              fontWeight: 'bold',
-              textAlign: 'center',
-              marginBottom: 10,
-            }}>
-            {this.props.route.params.title}
-          </Text>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 14,
-              textAlign: 'justify',
-              marginHorizontal: 20,
-            }}>
-            {this.props.route.params.body}
-          </Text>
+          <FlatGrid
+            itemDimension={150}
+            data={this.state.data}
+            renderItem={({item}) => (
+              <View
+                style={{
+                  backgroundColor: '#EDEDED',
+                  elevation: 2,
+                  height: 225,
+                }}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    style={{
+                      width: 170,
+                      height: 150,
+                      borderRadius: 3,
+                      marginTop: 5,
+                    }}
+                    source={{uri: item.thumbnail}}></Image>
+                </View>
+
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    flex: 1,
+                    padding: 10,
+                  }}>
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      marginBottom: 10,
+                    }}>
+                    {item.title}
+                  </Text>
+                </View>
+              </View>
+            )}
+          />
         </View>
         <View
           style={{
@@ -83,8 +108,9 @@ class Detail extends Component {
             paddingHorizontal: 20,
           }}>
           <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Home')}
             style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-            <Icon name="home" size={22} color="#DA0037" solid />
+            <Icon name="home" size={22} color="#DA0037" />
           </TouchableOpacity>
           <TouchableOpacity
             style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
@@ -95,6 +121,7 @@ class Detail extends Component {
             <Icon name="heart" size={22} color="#DA0037" solid />
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Profile')}
             style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
             <Icon name="user" size={22} color="#DA0037" solid />
           </TouchableOpacity>
@@ -108,4 +135,4 @@ class Detail extends Component {
   }
 }
 
-export default Detail;
+export default Album;
